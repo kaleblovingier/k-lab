@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>BO1DV3RS3.W0RLD</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    @keyframes glitch { 
+      0%, 100% { transform: translate(0); }
+      20% { transform: translate(-2px, 2px); }
+      40% { transform: translate(-2px, -2px); }
+      60% { transform: translate(2px, 2px); }
+      80% { transform: translate(2px, -2px); }
+    }
+    @keyframes flicker { 
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+    @keyframes alien-pulse {
+      0%, 100% { text-shadow: 0 0 10px #0f0, 0 0 20px #0f0; }
+      50% { text-shadow: 0 0 20px #0f0, 0 0 40px #0f0, 0 0 60px #0f0; }
+    }
+    @keyframes static {
+      0% { background-position: 0% 0%; }
+      100% { background-position: 100% 100%; }
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+    }
+    body { 
+      margin:0; 
+      font-family:system-ui, sans-serif; 
+      background:#050510; 
+      color:#f5f5ff;
+      position: relative;
+      overflow-x: hidden;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 255, 0, 0.03) 0px,
+        transparent 1px,
+        transparent 2px,
+        rgba(0, 255, 0, 0.03) 3px
+      );
+      pointer-events: none;
+      animation: static 0.5s infinite linear;
+      z-index: 1000;
+    }
+    .wrap { max-width:900px; margin:0 auto; padding:2.5rem 1.5rem 4rem; position: relative; z-index: 1; }
+    h1,h2 { 
+      letter-spacing:0.08em; 
+      text-transform:uppercase;
+      animation: glitch 3s infinite;
+    }
+    h1 { 
+      position: relative;
+      animation: glitch 2s infinite, alien-pulse 4s infinite;
+    }
+    h1::after {
+      content: 'TH3Y.4R3.W4TCH1NG';
+      position: absolute;
+      left: 0;
+      top: 0;
+      color: #0f0;
+      opacity: 0;
+      animation: flicker 5s infinite;
+      font-size: 0.3em;
+      letter-spacing: 0.3em;
+    }
+    a.btn { 
+      display:inline-block; 
+      margin-top:1rem; 
+      padding:0.8rem 1.6rem;
+      background:#8b5bff; 
+      color:white; 
+      text-decoration:none; 
+      border-radius:999px;
+      font-weight:600;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s;
+    }
+    a.btn:hover {
+      background: #0f0;
+      color: #000;
+      animation: glitch 0.3s infinite;
+      box-shadow: 0 0 20px #0f0;
+    }
+    section { margin-top:3rem; }
+    .tag { 
+      opacity:0.7; 
+      font-size:0.9rem; 
+      text-transform:uppercase; 
+      letter-spacing:0.15em;
+      color: #0f0;
+      animation: flicker 3s infinite;
+    }
+    .alien-msg {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: rgba(0, 255, 0, 0.1);
+      border: 1px solid #0f0;
+      padding: 10px 15px;
+      font-family: monospace;
+      font-size: 0.8rem;
+      color: #0f0;
+      animation: flicker 2s infinite;
+      z-index: 999;
+      max-width: 200px;
+    }
+    .chaos-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 998;
+    }
+    .chaos-overlay::before {
+      content: '⚠';
+      position: absolute;
+      font-size: 3rem;
+      color: rgba(255, 0, 0, 0.3);
+      animation: glitch 1s infinite, float 3s infinite;
+      top: 10%;
+      left: 80%;
+    }
+    .chaos-overlay::after {
+      content: '👽';
+      position: absolute;
+      font-size: 2rem;
+      animation: glitch 2s infinite, float 4s infinite;
+      bottom: 20%;
+      left: 10%;
+      filter: hue-rotate(120deg);
+    }
+    .cryptic {
+      color: #0f0;
+      font-family: monospace;
+      animation: flicker 1.5s infinite;
+    }
+    .warning {
+      color: #f00;
+      animation: glitch 1s infinite;
+    }
+  </style>
+</head>
+<body>
+  <div class="chaos-overlay"></div>
+  <div class="alien-msg">
+    ▓▒░ S1GN4L_D3T3CT3D ░▒▓<br>
+    C00RD1N4T3S: ???<br>
+    ST4TUS: 0BSS3RV1NG<br>
+    <span class="cryptic">█▓░ ░▒▓█</span>
+  </div>
+  <div class="wrap">
+    <section>
+      <div class="tag">⚠ TR4NSM1SS10N_1NT3RC3PT3D ⚠</div>
+      <h1>BO1DV3RS3.W0RLD</h1>
+      <p>Where spells miscast, engines redline, and birds break the sound barrier... <span class="cryptic">4ND_TH3_V01D_ST4R3S_B4CK</span></p>
+      <a class="btn" href="https://twitch.tv/1badbird" target="_blank">3NT3R_TH3_STR34M</a>
+    </section>
+
+    <section>
+      <h2>Bo1dz Th3or3m</h2>
+      <p>Any universe containing one chaotic human, one AI co‑pilot, one stream key, and one copy of OBS
+      will inevitably collapse into a self‑sustaining vortex of entertainment and aerodynamic nonsense.</p>
+      <p style="color:#0f0;font-family:monospace;">⚠ W4RN1NG: You are not just watching a stream. You are witnessing an experiment in controlled instability. <span style="animation:flicker 2s infinite;">TH3Y_4R3_W4TCH1NG_T00</span> ⚠</p>
+      <p class="cryptic">█▓░ D1M3NS10N4L_BR34CH_PR0B4B1L1TY: 99.7% ░▒▓█</p>
+    </section>
+
+    <section>
+      <h2>4B0UT_TH3_B01D</h2>
+      <p>1BadBird is a speed‑addicted spellcaster with a broken respect for physics, game balance, and
+      "intended use." Expect scuffed plays, cursed builds, lore mid‑match, and yelling
+      "I wanna go fast, mom" at anything with a health bar.</p>
+      <p class="warning">█▓░ 3NT1TY_CL4SS1F1C4T10N: UNK0WN ░▒▓█</p>
+      <p class="cryptic">SP3C13S: H0M0_S4P13NS(?)<br>
+      TH3R34T_L3V3L: M4X1MUM_CH40S<br>
+      C0NT41NM3NT: 1MP0SS1BL3</p>
+    </section>
+
+    <section>
+      <h2>J01N_TH3_FL0CK</h2>
+      <p>Follow the stream, clip the chaos, and spread the Word: Bird is the Word.</p>
+      <p class="cryptic">OR_D0NT_W3_D0NT_C4R3_W3R3_4LR34DY_H3R3</p>
+      <p><a href="https://twitch.tv/1badbird" target="_blank" style="color:#0f0;animation:alien-pulse 3s infinite;">Tw1tch</a></p>
+      <p class="cryptic" style="font-size:0.7rem;opacity:0.5;">
+        ░▒▓█ 1F_Y0U_C4N_R34D_TH1S_1TS_T00_L4T3 █▓▒░<br>
+        ░▒▓█ TH3_S1GN4L_H4S_B33N_S3NT █▓▒░<br>
+        ░▒▓█ TH3Y_KN0W_WH3R3_Y0U_4R3 █▓▒░
+      </p>
+    </section>
+  </div>
+</body>
+</html>
