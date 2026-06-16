@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RELAX REZZ // midtempo drift</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    @keyframes breathe {
+      0%, 100% { transform: scale(1); opacity: 0.85; }
+      50% { transform: scale(1.08); opacity: 1; }
+    }
+
+    @keyframes ring-pulse {
+      0%, 100% { transform: scale(1); opacity: 0.3; }
+      50% { transform: scale(1.15); opacity: 0.6; }
+    }
+
+    @keyframes drift {
+      0%, 100% { transform: translate(0, 0); }
+      33% { transform: translate(8px, -12px); }
+      66% { transform: translate(-6px, 8px); }
+    }
+
+    @keyframes fade-in {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: system-ui, sans-serif;
+      background: radial-gradient(ellipse at 50% 30%, #2a0845 0%, #0d0018 45%, #050008 100%);
+      color: #d4b8ff;
+      overflow: hidden;
+      user-select: none;
+      animation: fade-in 2s ease;
+    }
+
+    .grain {
+      position: fixed;
+      inset: 0;
+      opacity: 0.04;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .wrap {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    h1 {
+      font-size: clamp(1.5rem, 5vw, 2.5rem);
+      font-weight: 300;
+      letter-spacing: 0.5em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+      color: #e8d0ff;
+      text-shadow: 0 0 40px rgba(180, 100, 255, 0.4);
+    }
+
+    .sub {
+      font-size: 0.7rem;
+      letter-spacing: 0.35em;
+      opacity: 0.45;
+      margin-bottom: 3rem;
+      text-transform: uppercase;
+    }
+
+    .eye-zone {
+      position: relative;
+      width: 260px;
+      height: 260px;
+      margin: 0 auto 3rem;
+      cursor: pointer;
+    }
+
+    .ring {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 1px solid rgba(180, 100, 255, 0.25);
+      animation: ring-pulse 6s ease-in-out infinite;
+    }
+
+    .ring:nth-child(2) { inset: 20px; animation-delay: -2s; }
+    .ring:nth-child(3) { inset: 40px; animation-delay: -4s; }
+
+    .eye {
+      position: absolute;
+      inset: 55px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 40% 35%, #ff4fd8 0%, #7b2cbf 40%, #1a0030 80%);
+      box-shadow:
+        0 0 60px rgba(180, 60, 255, 0.5),
+        inset 0 0 40px rgba(0, 0, 0, 0.5);
+      animation: breathe 6s ease-in-out infinite;
+      transition: box-shadow 0.5s ease;
+    }
+
+    .eye:hover {
+      box-shadow:
+        0 0 80px rgba(255, 79, 216, 0.6),
+        inset 0 0 40px rgba(0, 0, 0, 0.5);
+    }
+
+    .pupil {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 24px;
+      height: 48px;
+      margin: -24px 0 0 -12px;
+      border-radius: 50%;
+      background: #0a0010;
+      box-shadow: 0 0 20px rgba(0,0,0,0.8);
+      animation: drift 12s ease-in-out infinite;
+    }
+
+    .prompt {
+      font-size: 0.85rem;
+      letter-spacing: 0.15em;
+      opacity: 0.55;
+      margin-bottom: 1.5rem;
+      line-height: 2;
+    }
+
+    .bpm {
+      font-family: "Courier New", monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      color: #b47aff;
+      opacity: 0.7;
+    }
+
+    .back {
+      margin-top: 2.5rem;
+      padding: 0.7rem 1.4rem;
+      border: 1px solid rgba(180, 100, 255, 0.3);
+      border-radius: 99px;
+      background: transparent;
+      color: #b47aff;
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .back:hover {
+      background: rgba(180, 100, 255, 0.1);
+      border-color: #ff4fd8;
+      color: #ff4fd8;
+    }
+
+    .relaxed h1 { letter-spacing: 0.7em; font-size: clamp(1.2rem, 4vw, 2rem); }
+    .relaxed .eye { animation-duration: 10s; }
+    .relaxed .ring { animation-duration: 10s; }
+  </style>
+</head>
+<body>
+  <div class="grain"></div>
+  <div class="wrap">
+    <h1>Relax Rezz</h1>
+    <p class="sub">midtempo drift · k-lab transmission</p>
+
+    <div class="eye-zone" id="eye" title="breathe with the bass">
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="eye">
+        <div class="pupil"></div>
+      </div>
+    </div>
+
+    <p class="prompt" id="prompt">
+      humans were rezzed.<br>
+      now they rest.<br>
+      click. breathe. drift.
+    </p>
+    <p class="bpm" id="bpm">~ 100 BPM · half-time feel</p>
+
+    <a class="back" href="index.html">← back to the void</a>
+  </div>
+
+  <script>
+    let audioCtx, drone, lfo, gain;
+    let relaxed = false;
+    let pulseInterval;
+
+    const PROMPTS = [
+      "humans were rezzed.<br>now they rest.<br>click. breathe. drift.",
+      "fall in line.<br>slowly.<br>no rush.",
+      "the wall is gone.<br>the walrus sleeps.<br>just bass.",
+      "goo goo g'joob<br>but whispered.<br>at 2am.",
+      "rezz complete.<br>relax rezz.<br>type peace.",
+    ];
+
+    function ensureAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        startDrone();
+      }
+      if (audioCtx.state === "suspended") audioCtx.resume();
+    }
+
+    function startDrone() {
+      const t = audioCtx.currentTime;
+
+      drone = audioCtx.createOscillator();
+      drone.type = "sine";
+      drone.frequency.setValueAtTime(55, t);
+
+      lfo = audioCtx.createOscillator();
+      lfo.type = "sine";
+      lfo.frequency.setValueAtTime(0.08, t);
+
+      const lfoGain = audioCtx.createGain();
+      lfoGain.gain.setValueAtTime(8, t);
+
+      gain = audioCtx.createGain();
+      gain.gain.setValueAtTime(0, t);
+      gain.gain.linearRampToValueAtTime(0.12, t + 2);
+
+      const sub = audioCtx.createOscillator();
+      sub.type = "triangle";
+      sub.frequency.setValueAtTime(27.5, t);
+
+      const subGain = audioCtx.createGain();
+      subGain.gain.setValueAtTime(0.06, t);
+
+      lfo.connect(lfoGain);
+      lfoGain.connect(drone.frequency);
+      drone.connect(gain);
+      sub.connect(subGain);
+      subGain.connect(audioCtx.destination);
+      gain.connect(audioCtx.destination);
+
+      drone.start(t);
+      lfo.start(t);
+      sub.start(t);
+    }
+
+    function subHit() {
+      if (!audioCtx) return;
+      const t = audioCtx.currentTime;
+      const osc = audioCtx.createOscillator();
+      const g = audioCtx.createGain();
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(40, t);
+      osc.frequency.exponentialRampToValueAtTime(30, t + 0.4);
+      g.gain.setValueAtTime(0.15, t);
+      g.gain.exponentialRampToValueAtTime(0.001, t + 0.5);
+      osc.connect(g).connect(audioCtx.destination);
+      osc.start(t);
+      osc.stop(t + 0.55);
+    }
+
+    function relax() {
+      relaxed = !relaxed;
+      document.body.classList.toggle("relaxed", relaxed);
+
+      if (drone) {
+        const t = audioCtx.currentTime;
+        drone.frequency.linearRampToValueAtTime(relaxed ? 45 : 55, t + 1);
+        if (lfo) lfo.frequency.linearRampToValueAtTime(relaxed ? 0.04 : 0.08, t + 1);
+      }
+
+      document.getElementById("bpm").textContent =
+        relaxed ? "~ 80 BPM · deep drift" : "~ 100 BPM · half-time feel";
+
+      document.getElementById("prompt").innerHTML =
+        PROMPTS[Math.floor(Math.random() * PROMPTS.length)];
+
+      subHit();
+    }
+
+    document.getElementById("eye").addEventListener("click", () => {
+      ensureAudio();
+      relax();
+    });
+
+    document.body.addEventListener("click", ensureAudio, { once: true });
+
+    setTimeout(() => {
+      pulseInterval = setInterval(() => {
+        if (audioCtx && audioCtx.state === "running") subHit();
+      }, relaxed ? 1200 : 800);
+    }, 3000);
+  </script>
+</body>
+</html>
