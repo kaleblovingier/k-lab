@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>RELAX REZZ // midtempo drift</title>
+  <title>RELAX REZZ → GO FASTER</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -23,9 +23,15 @@
       66% { transform: translate(-6px, 8px); }
     }
 
-    @keyframes fade-in {
-      from { opacity: 0; }
-      to { opacity: 1; }
+    @keyframes shake {
+      0%, 100% { transform: translate(0, 0); }
+      25% { transform: translate(-4px, 2px); }
+      75% { transform: translate(4px, -2px); }
+    }
+
+    @keyframes streak {
+      0% { transform: translateX(-100vw); }
+      100% { transform: translateX(100vw); }
     }
 
     body {
@@ -39,7 +45,7 @@
       color: #d4b8ff;
       overflow: hidden;
       user-select: none;
-      animation: fade-in 2s ease;
+      transition: background 0.6s ease;
     }
 
     .grain {
@@ -49,6 +55,23 @@
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
       pointer-events: none;
       z-index: 1;
+    }
+
+    .streaks {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0;
+      transition: opacity 0.4s;
+    }
+
+    .streak {
+      position: absolute;
+      height: 2px;
+      width: 120px;
+      background: linear-gradient(90deg, transparent, #ff4fd8, transparent);
+      animation: streak 0.4s linear infinite;
     }
 
     .wrap {
@@ -66,6 +89,7 @@
       margin-bottom: 0.5rem;
       color: #e8d0ff;
       text-shadow: 0 0 40px rgba(180, 100, 255, 0.4);
+      transition: all 0.3s ease;
     }
 
     .sub {
@@ -89,7 +113,7 @@
       inset: 0;
       border-radius: 50%;
       border: 1px solid rgba(180, 100, 255, 0.25);
-      animation: ring-pulse 6s ease-in-out infinite;
+      animation: ring-pulse var(--pulse, 6s) ease-in-out infinite;
     }
 
     .ring:nth-child(2) { inset: 20px; animation-delay: -2s; }
@@ -100,17 +124,9 @@
       inset: 55px;
       border-radius: 50%;
       background: radial-gradient(circle at 40% 35%, #ff4fd8 0%, #7b2cbf 40%, #1a0030 80%);
-      box-shadow:
-        0 0 60px rgba(180, 60, 255, 0.5),
-        inset 0 0 40px rgba(0, 0, 0, 0.5);
-      animation: breathe 6s ease-in-out infinite;
-      transition: box-shadow 0.5s ease;
-    }
-
-    .eye:hover {
-      box-shadow:
-        0 0 80px rgba(255, 79, 216, 0.6),
-        inset 0 0 40px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 0 60px rgba(180, 60, 255, 0.5), inset 0 0 40px rgba(0, 0, 0, 0.5);
+      animation: breathe var(--pulse, 6s) ease-in-out infinite;
+      transition: box-shadow 0.3s, background 0.3s;
     }
 
     .pupil {
@@ -123,7 +139,7 @@
       border-radius: 50%;
       background: #0a0010;
       box-shadow: 0 0 20px rgba(0,0,0,0.8);
-      animation: drift 12s ease-in-out infinite;
+      animation: drift var(--drift, 12s) ease-in-out infinite;
     }
 
     .prompt {
@@ -142,6 +158,23 @@
       opacity: 0.7;
     }
 
+    .speed-bar {
+      width: min(80vw, 320px);
+      height: 6px;
+      margin: 1rem auto 0;
+      background: rgba(255,255,255,0.06);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .speed-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #7b2cbf, #ff4fd8, #ff6b00);
+      border-radius: 99px;
+      transition: width 0.2s ease;
+    }
+
     .back {
       margin-top: 2.5rem;
       padding: 0.7rem 1.4rem;
@@ -156,54 +189,68 @@
       transition: all 0.2s;
     }
 
-    .back:hover {
-      background: rgba(180, 100, 255, 0.1);
-      border-color: #ff4fd8;
-      color: #ff4fd8;
-    }
+    .back:hover { background: rgba(180, 100, 255, 0.1); border-color: #ff4fd8; color: #ff4fd8; }
 
-    .relaxed h1 { letter-spacing: 0.7em; font-size: clamp(1.2rem, 4vw, 2rem); }
-    .relaxed .eye { animation-duration: 10s; }
-    .relaxed .ring { animation-duration: 10s; }
+    /* speed stages */
+    .s1 { --pulse: 4s; --drift: 8s; }
+    .s2 { --pulse: 2.5s; --drift: 5s; }
+    .s2 h1 { letter-spacing: 0.35em; color: #f0a0ff; }
+    .s3 { --pulse: 1.4s; --drift: 3s; }
+    .s3 h1 { letter-spacing: 0.2em; color: #ff80e0; text-shadow: 0 0 30px #ff4fd8; }
+    .s3 .eye { background: radial-gradient(circle at 40% 35%, #ff6b00 0%, #ff4fd8 40%, #1a0030 80%); }
+    .s4 { --pulse: 0.7s; --drift: 1.5s; }
+    .s4 body, body.s4 { background: radial-gradient(ellipse at 50% 30%, #4a0845 0%, #1a0018 45%, #0a0008 100%); }
+    .s4 h1 {
+      letter-spacing: 0.1em;
+      font-weight: 700;
+      color: #ff6b00;
+      text-shadow: 0 0 20px #ff4fd8, 0 0 40px #ff6b00;
+      animation: shake 0.15s infinite;
+    }
+    .s4 .wrap { animation: shake 0.12s infinite; }
+    .s4 .streaks { opacity: 1; }
+    .s4 .eye {
+      background: radial-gradient(circle at 40% 35%, #fff 0%, #ff4fd8 30%, #ff2200 70%);
+      box-shadow: 0 0 100px rgba(255, 80, 0, 0.8);
+    }
   </style>
 </head>
 <body>
   <div class="grain"></div>
-  <div class="wrap">
-    <h1>Relax Rezz</h1>
-    <p class="sub">midtempo drift · k-lab transmission</p>
+  <div class="streaks" id="streaks"></div>
 
-    <div class="eye-zone" id="eye" title="breathe with the bass">
+  <div class="wrap">
+    <h1 id="title">Relax Rezz</h1>
+    <p class="sub" id="sub">midtempo drift · click to accelerate</p>
+
+    <div class="eye-zone" id="eye" title="click = go faster">
       <div class="ring"></div>
       <div class="ring"></div>
       <div class="ring"></div>
-      <div class="eye">
-        <div class="pupil"></div>
-      </div>
+      <div class="eye"><div class="pupil"></div></div>
     </div>
 
     <p class="prompt" id="prompt">
-      humans were rezzed.<br>
-      now they rest.<br>
-      click. breathe. drift.
+      humans were rezzed.<br>now they rest.<br>click. go faster.
     </p>
-    <p class="bpm" id="bpm">~ 100 BPM · half-time feel</p>
+    <p class="bpm" id="bpm">~ 100 BPM · half-time</p>
+    <div class="speed-bar"><div class="speed-fill" id="speedFill"></div></div>
 
     <a class="back" href="index.html">← back to the void</a>
   </div>
 
   <script>
-    let audioCtx, drone, lfo, gain;
-    let relaxed = false;
-    let pulseInterval;
-
-    const PROMPTS = [
-      "humans were rezzed.<br>now they rest.<br>click. breathe. drift.",
-      "fall in line.<br>slowly.<br>no rush.",
-      "the wall is gone.<br>the walrus sleeps.<br>just bass.",
-      "goo goo g'joob<br>but whispered.<br>at 2am.",
-      "rezz complete.<br>relax rezz.<br>type peace.",
+    const STAGES = [
+      { cls: "", title: "Relax Rezz", sub: "midtempo drift · click to accelerate", bpm: "~ 100 BPM · half-time", bpmN: 100, pulseMs: 800, drone: 55, lfo: 0.08, prompt: "humans were rezzed.<br>now they rest.<br>click. go faster." },
+      { cls: "s1", title: "Cruise", sub: "picking up · keep clicking", bpm: "~ 120 BPM · rolling", bpmN: 120, pulseMs: 500, drone: 65, lfo: 0.15, prompt: "mom i wanna go fast.<br>okay but slightly.<br>rolling now." },
+      { cls: "s2", title: "Push", sub: "tempo rising · no brakes", bpm: "~ 140 BPM · pushing", bpmN: 140, pulseMs: 340, drone: 75, lfo: 0.28, prompt: "bumblebee can't keep up.<br>walrus is jogging.<br>push it." },
+      { cls: "s3", title: "Go Faster", sub: "k-lab redline · punch it", bpm: "~ 174 BPM · fast", bpmN: 174, pulseMs: 200, drone: 90, lfo: 0.5, prompt: "I wanna go fast mom.<br>physics optional.<br>PUNCH IT CHEWIE." },
+      { cls: "s4", title: "MAX REDLINE", sub: "chaos level: MAX · type shieeet", bpm: "~ 200 BPM · MAX", bpmN: 200, pulseMs: 120, drone: 110, lfo: 0.9, prompt: "RELAX REZZ?<br>NAH.<br>GO FASTER FOREVER." },
     ];
+
+    let stage = 0;
+    let audioCtx, drone, lfo, gain;
+    let pulseTimer;
 
     function ensureAudio() {
       if (!audioCtx) {
@@ -215,87 +262,89 @@
 
     function startDrone() {
       const t = audioCtx.currentTime;
-
       drone = audioCtx.createOscillator();
-      drone.type = "sine";
+      drone.type = "sawtooth";
       drone.frequency.setValueAtTime(55, t);
-
       lfo = audioCtx.createOscillator();
       lfo.type = "sine";
       lfo.frequency.setValueAtTime(0.08, t);
-
       const lfoGain = audioCtx.createGain();
-      lfoGain.gain.setValueAtTime(8, t);
-
+      lfoGain.gain.setValueAtTime(6, t);
       gain = audioCtx.createGain();
       gain.gain.setValueAtTime(0, t);
-      gain.gain.linearRampToValueAtTime(0.12, t + 2);
-
-      const sub = audioCtx.createOscillator();
-      sub.type = "triangle";
-      sub.frequency.setValueAtTime(27.5, t);
-
-      const subGain = audioCtx.createGain();
-      subGain.gain.setValueAtTime(0.06, t);
-
+      gain.gain.linearRampToValueAtTime(0.08, t + 1.5);
       lfo.connect(lfoGain);
       lfoGain.connect(drone.frequency);
       drone.connect(gain);
-      sub.connect(subGain);
-      subGain.connect(audioCtx.destination);
       gain.connect(audioCtx.destination);
-
       drone.start(t);
       lfo.start(t);
-      sub.start(t);
+      resetPulse();
     }
 
-    function subHit() {
+    function subHit(intensity = 1) {
       if (!audioCtx) return;
       const t = audioCtx.currentTime;
       const osc = audioCtx.createOscillator();
       const g = audioCtx.createGain();
-      osc.type = "sine";
-      osc.frequency.setValueAtTime(40, t);
-      osc.frequency.exponentialRampToValueAtTime(30, t + 0.4);
-      g.gain.setValueAtTime(0.15, t);
-      g.gain.exponentialRampToValueAtTime(0.001, t + 0.5);
+      osc.type = stage >= 3 ? "square" : "sine";
+      const base = 30 + stage * 12;
+      osc.frequency.setValueAtTime(base * intensity, t);
+      osc.frequency.exponentialRampToValueAtTime(base * 0.7, t + 0.15);
+      g.gain.setValueAtTime(0.08 + stage * 0.03, t);
+      g.gain.exponentialRampToValueAtTime(0.001, t + 0.2);
       osc.connect(g).connect(audioCtx.destination);
       osc.start(t);
-      osc.stop(t + 0.55);
+      osc.stop(t + 0.25);
     }
 
-    function relax() {
-      relaxed = !relaxed;
-      document.body.classList.toggle("relaxed", relaxed);
+    function resetPulse() {
+      clearInterval(pulseTimer);
+      pulseTimer = setInterval(() => {
+        if (audioCtx?.state === "running") subHit(1 + stage * 0.15);
+      }, STAGES[stage].pulseMs);
+    }
+
+    function applyStage() {
+      const s = STAGES[stage];
+      document.body.className = s.cls;
+      document.getElementById("title").textContent = s.title;
+      document.getElementById("sub").textContent = s.sub;
+      document.getElementById("bpm").textContent = s.bpm;
+      document.getElementById("prompt").innerHTML = s.prompt;
+      document.getElementById("speedFill").style.width = (stage / (STAGES.length - 1) * 100) + "%";
 
       if (drone) {
         const t = audioCtx.currentTime;
-        drone.frequency.linearRampToValueAtTime(relaxed ? 45 : 55, t + 1);
-        if (lfo) lfo.frequency.linearRampToValueAtTime(relaxed ? 0.04 : 0.08, t + 1);
+        drone.frequency.linearRampToValueAtTime(s.drone, t + 0.15);
+        lfo.frequency.linearRampToValueAtTime(s.lfo, t + 0.15);
+        gain.gain.linearRampToValueAtTime(0.06 + stage * 0.025, t + 0.15);
       }
-
-      document.getElementById("bpm").textContent =
-        relaxed ? "~ 80 BPM · deep drift" : "~ 100 BPM · half-time feel";
-
-      document.getElementById("prompt").innerHTML =
-        PROMPTS[Math.floor(Math.random() * PROMPTS.length)];
-
-      subHit();
+      resetPulse();
+      subHit(1.5);
     }
 
-    document.getElementById("eye").addEventListener("click", () => {
+    function goFaster() {
       ensureAudio();
-      relax();
-    });
+      if (stage < STAGES.length - 1) stage++;
+      applyStage();
+    }
 
+    document.getElementById("eye").addEventListener("click", goFaster);
+    document.body.addEventListener("keydown", e => {
+      if (e.code === "Space") { e.preventDefault(); goFaster(); }
+    });
     document.body.addEventListener("click", ensureAudio, { once: true });
 
-    setTimeout(() => {
-      pulseInterval = setInterval(() => {
-        if (audioCtx && audioCtx.state === "running") subHit();
-      }, relaxed ? 1200 : 800);
-    }, 3000);
+    const streaks = document.getElementById("streaks");
+    for (let i = 0; i < 12; i++) {
+      const s = document.createElement("div");
+      s.className = "streak";
+      s.style.top = (8 + i * 7) + "%";
+      s.style.animationDelay = (i * 0.03) + "s";
+      s.style.animationDuration = (0.25 + Math.random() * 0.2) + "s";
+      streaks.appendChild(s);
+    }
   </script>
 </body>
 </html>
