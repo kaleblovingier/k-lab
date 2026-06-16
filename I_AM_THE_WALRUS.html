@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>I AM THE WALRUS // type shieeet</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    @keyframes glitch {
+      0%, 100% { transform: translate(0); filter: hue-rotate(0deg); }
+      20% { transform: translate(-3px, 2px); }
+      40% { transform: translate(3px, -2px); filter: hue-rotate(90deg); }
+      60% { transform: translate(-2px, -3px); }
+      80% { transform: translate(2px, 3px); filter: hue-rotate(180deg); }
+    }
+
+    @keyframes walrus-float {
+      0%, 100% { transform: translateY(0) rotate(-2deg); }
+      50% { transform: translateY(-18px) rotate(2deg); }
+    }
+
+    @keyframes scan {
+      0% { background-position: 0 0; }
+      100% { background-position: 0 100%; }
+    }
+
+    @keyframes pulse-tusk {
+      0%, 100% { box-shadow: 0 0 20px #ff6ec7, 0 0 40px #7b68ee; }
+      50% { box-shadow: 0 0 50px #ffd54f, 0 0 80px #ff6ec7; }
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: "Courier New", monospace;
+      background: #0a0014;
+      color: #e8d5ff;
+      overflow-x: hidden;
+      cursor: crosshair;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(123, 104, 238, 0.04) 0px,
+        transparent 2px,
+        transparent 4px
+      );
+      animation: scan 8s linear infinite;
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    .wall {
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 50% 100%, rgba(255, 110, 199, 0.15) 0%, transparent 60%),
+        linear-gradient(180deg, #1a0030 0%, #0a0014 40%, #050008 100%);
+      z-index: 0;
+    }
+
+    .wall-text {
+      position: fixed;
+      font-size: clamp(4rem, 20vw, 14rem);
+      font-weight: 900;
+      color: rgba(255, 255, 255, 0.03);
+      letter-spacing: 0.2em;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      white-space: nowrap;
+      z-index: 0;
+      user-select: none;
+    }
+
+    .wrap {
+      position: relative;
+      z-index: 2;
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 4rem;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: clamp(1.4rem, 5vw, 2.4rem);
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      animation: glitch 4s infinite;
+      background: linear-gradient(90deg, #ff6ec7, #ffd54f, #7b68ee, #ff6ec7);
+      background-size: 300% 100%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+    }
+
+    .sub {
+      font-size: 0.75rem;
+      letter-spacing: 0.3em;
+      opacity: 0.5;
+      margin-bottom: 2rem;
+      text-transform: uppercase;
+    }
+
+    .walrus-zone {
+      position: relative;
+      margin: 2rem auto;
+      width: 280px;
+      height: 280px;
+      animation: pulse-tusk 3s ease-in-out infinite;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .walrus {
+      animation: walrus-float 4s ease-in-out infinite;
+      cursor: pointer;
+      transition: transform 0.15s;
+    }
+
+    .walrus:hover { transform: scale(1.08); }
+    .walrus.bonk { animation: glitch 0.4s ease; }
+
+    .walrus svg { width: 220px; height: 220px; filter: drop-shadow(0 0 30px rgba(255, 110, 199, 0.6)); }
+
+    .lyric-box {
+      margin: 2rem 0;
+      padding: 1.5rem;
+      border: 1px solid rgba(255, 110, 199, 0.3);
+      border-radius: 12px;
+      background: rgba(123, 104, 238, 0.08);
+      min-height: 100px;
+      font-size: 1.1rem;
+      line-height: 1.8;
+      font-style: italic;
+    }
+
+    .lyric-box .goo {
+      color: #ffd54f;
+      font-weight: bold;
+      font-style: normal;
+      letter-spacing: 0.1em;
+    }
+
+    .meter {
+      margin: 1.5rem auto;
+      width: min(90%, 400px);
+    }
+
+    .meter-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      opacity: 0.45;
+      margin-bottom: 0.5rem;
+    }
+
+    .meter-track {
+      height: 10px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .meter-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #7b68ee, #ff6ec7, #ffd54f);
+      border-radius: 99px;
+      transition: width 0.25s ease;
+      box-shadow: 0 0 16px rgba(255, 110, 199, 0.5);
+    }
+
+    .status {
+      margin-top: 0.75rem;
+      font-size: 0.8rem;
+      opacity: 0.65;
+    }
+
+    .keys {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      justify-content: center;
+      margin-top: 1.5rem;
+    }
+
+    .key {
+      padding: 0.5rem 1rem;
+      border: 1px solid rgba(255, 213, 79, 0.4);
+      border-radius: 99px;
+      background: rgba(255, 213, 79, 0.06);
+      color: #ffd54f;
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      cursor: pointer;
+      transition: all 0.15s;
+      text-transform: uppercase;
+    }
+
+    .key:hover {
+      background: rgba(255, 110, 199, 0.2);
+      border-color: #ff6ec7;
+      transform: scale(1.05);
+    }
+
+    .nonsense-layer {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 50;
+    }
+
+    .floater {
+      position: absolute;
+      font-size: 0.85rem;
+      color: rgba(255, 213, 79, 0.7);
+      animation: float-up 2.5s ease-out forwards;
+      text-shadow: 0 0 8px rgba(255, 110, 199, 0.8);
+    }
+
+    @keyframes float-up {
+      0% { opacity: 1; transform: translateY(0) scale(1); }
+      100% { opacity: 0; transform: translateY(-120px) scale(1.4); }
+    }
+
+    .transcended .wall-text {
+      color: rgba(255, 213, 79, 0.12);
+      animation: glitch 1s infinite;
+    }
+
+    .transcended h1 {
+      letter-spacing: 0.4em;
+    }
+  </style>
+</head>
+<body>
+  <div class="wall"></div>
+  <div class="wall-text" id="wallText">THE WALL</div>
+
+  <div class="wrap">
+    <h1 id="title">I Am The Walrus</h1>
+    <p class="sub">back against the waLRUS · type shieeet · k-lab transmission</p>
+
+    <div class="walrus-zone">
+      <div class="walrus" id="walrus" title="bonk the walrus">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="100" cy="130" rx="75" ry="55" fill="#8b7aab"/>
+          <ellipse cx="100" cy="125" rx="70" ry="50" fill="#a090c0"/>
+          <ellipse cx="55" cy="95" rx="35" ry="28" fill="#a090c0"/>
+          <circle cx="42" cy="88" r="5" fill="#1a0a20"/>
+          <circle cx="44" cy="86" r="2" fill="#fff"/>
+          <path d="M30 100 Q15 105 20 115" fill="none" stroke="#6a5a8a" stroke-width="3"/>
+          <ellipse cx="145" cy="95" rx="35" ry="28" fill="#a090c0"/>
+          <circle cx="158" cy="88" r="5" fill="#1a0a20"/>
+          <circle cx="160" cy="86" r="2" fill="#fff"/>
+          <path d="M170 100 Q185 105 180 115" fill="none" stroke="#6a5a8a" stroke-width="3"/>
+          <path d="M75 155 Q70 175 65 190" fill="#f0e8ff" stroke="#c8b8e8" stroke-width="2"/>
+          <path d="M125 155 Q130 175 135 190" fill="#f0e8ff" stroke="#c8b8e8" stroke-width="2"/>
+          <ellipse cx="100" cy="60" rx="55" ry="45" fill="#9b8abb"/>
+          <circle cx="80" cy="52" r="8" fill="#1a0a20"/>
+          <circle cx="82" cy="50" r="3" fill="#fff"/>
+          <circle cx="120" cy="52" r="8" fill="#1a0a20"/>
+          <circle cx="122" cy="50" r="3" fill="#fff"/>
+          <ellipse cx="100" cy="72" rx="18" ry="12" fill="#7b6a9b"/>
+          <path d="M55 68 Q100 95 145 68" fill="none" stroke="#5a4a7a" stroke-width="3"/>
+          <text x="100" y="175" text-anchor="middle" fill="#ffd54f" font-size="11" font-family="monospace" opacity="0.7">goo goo g'joob</text>
+        </svg>
+      </div>
+    </div>
+
+    <div class="lyric-box" id="lyric">
+      sitting on a <span class="goo">cornflake</span><br>
+      waiting for the van to come
+    </div>
+
+    <div class="meter">
+      <div class="meter-label" id="meterLabel">walrus energy</div>
+      <div class="meter-track"><div class="meter-fill" id="fill"></div></div>
+      <div class="status" id="status">click walrus. type shieeet. transcend the wall.</div>
+    </div>
+
+    <div class="keys">
+      <button class="key" data-phrase="eggman">eggman</button>
+      <button class="key" data-phrase="expert">expert texpert</button>
+      <button class="key" data-phrase="crab">crablocker</button>
+      <button class="key" data-phrase="pigs">semolina pilchard</button>
+      <button class="key" data-phrase="goo">goo goo g'joob</button>
+      <button class="key" data-phrase="koo">koo koo achoo</button>
+    </div>
+  </div>
+
+  <div class="nonsense-layer" id="floaters"></div>
+
+  <script>
+    const LYRICS = [
+      "I am he as you are he as you are me and we are all together",
+      "sitting on a cornflake, waiting for the van to come",
+      "corporation tee-shirt, stupid bloody Tuesday",
+      "man you been a naughty boy, they let you grow too long",
+      "see how they run like pigs from a gun, see how they fly",
+      "sitting in an English garden, waiting for the sun",
+      "if the sun don't come, you get a tan from standing in the English rain",
+      "expert texpert choking smokers, don't you think the joker laughs at you",
+      "see how they smile like pigs in a sty, see how they snied",
+      "semolina pilchard climbing up the Eiffel Tower",
+      "elementary penguin singing Hare Krishna",
+      "man you should have seen them kicking Edgar Allan Poe",
+    ];
+
+    const PHRASES = {
+      eggman: "I AM THE EGG MAN — they are the egg men — I AM THE WALRUS",
+      expert: "expert texpert choking smokers don't you think the joker laughs at you",
+      crab: "yellow matter custard dripping from a dead dog's eye — type shieeet",
+      pigs: "semolina pilchard climbing up the Eiffel Tower — see how they fly",
+      goo: "goo goo g'joob — goo goo g'joob — goo goo g'joob",
+      koo: "I am the eggman — koo koo achoo — I am the walrus",
+    };
+
+    const FLOAT_WORDS = [
+      "g'joob", "eggman", "pilchard", "cornflake", "walrus", "shieeet",
+      "achoo", "joker", "penguin", "krishna", "tuesday", "van",
+    ];
+
+    let charge = 0;
+    const THRESHOLD = 10;
+    let audioCtx;
+    let lyricIdx = 0;
+
+    function ensureAudio() {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === "suspended") audioCtx.resume();
+    }
+
+    function playTrippy(base = 110) {
+      ensureAudio();
+      const t = audioCtx.currentTime;
+      [0, 7, 12, 19].forEach((semi, i) => {
+        const osc = audioCtx.createOscillator();
+        const g = audioCtx.createGain();
+        osc.type = i % 2 ? "sawtooth" : "sine";
+        osc.frequency.setValueAtTime(base * Math.pow(2, semi / 12), t + i * 0.07);
+        g.gain.setValueAtTime(0.07, t + i * 0.07);
+        g.gain.exponentialRampToValueAtTime(0.001, t + i * 0.07 + 0.35);
+        osc.connect(g).connect(audioCtx.destination);
+        osc.start(t + i * 0.07);
+        osc.stop(t + i * 0.07 + 0.4);
+      });
+    }
+
+    function walrusHonk() {
+      ensureAudio();
+      const t = audioCtx.currentTime;
+      for (let i = 0; i < 6; i++) {
+        const osc = audioCtx.createOscillator();
+        const g = audioCtx.createGain();
+        osc.type = "square";
+        osc.frequency.setValueAtTime(60 + Math.random() * 40, t + i * 0.06);
+        g.gain.setValueAtTime(0.05, t + i * 0.06);
+        g.gain.exponentialRampToValueAtTime(0.001, t + i * 0.06 + 0.1);
+        osc.connect(g).connect(audioCtx.destination);
+        osc.start(t + i * 0.06);
+        osc.stop(t + i * 0.06 + 0.12);
+      }
+    }
+
+    function spawnFloater(x, y, text) {
+      const el = document.createElement("div");
+      el.className = "floater";
+      el.textContent = text;
+      el.style.left = x + "px";
+      el.style.top = y + "px";
+      document.getElementById("floaters").appendChild(el);
+      setTimeout(() => el.remove(), 2600);
+    }
+
+    function addCharge(n, x, y) {
+      charge = Math.min(charge + n, THRESHOLD + 3);
+      const pct = Math.min(100, Math.floor(charge / THRESHOLD * 100));
+      document.getElementById("fill").style.width = pct + "%";
+
+      spawnFloater(
+        x + (Math.random() - 0.5) * 60,
+        y - 20,
+        FLOAT_WORDS[Math.floor(Math.random() * FLOAT_WORDS.length)],
+      );
+
+      if (charge >= THRESHOLD && !document.body.classList.contains("transcended")) {
+        transcend();
+      } else {
+        document.getElementById("status").textContent = `walrus energy: ${pct}% — keep bonking`;
+      }
+    }
+
+    function transcend() {
+      document.body.classList.add("transcended");
+      document.getElementById("title").textContent = "G OO G OO G'JOOB";
+      document.getElementById("wallText").textContent = "NO WALL";
+      document.getElementById("meterLabel").textContent = "transcendence achieved";
+      document.getElementById("fill").style.width = "100%";
+      document.getElementById("status").textContent =
+        "back was against the walrus. walrus won. type shieeet forever.";
+      document.getElementById("lyric").innerHTML =
+        '<span class="goo">I AM THE WALRUS</span><br>back against the wall? nah. back against the <em>walrus</em>.';
+
+      [110, 146, 174, 220, 261, 329].forEach((f, i) => setTimeout(() => playTrippy(f), i * 200));
+      setTimeout(walrusHonk, 1200);
+
+      for (let i = 0; i < 20; i++) {
+        setTimeout(() => spawnFloater(
+          Math.random() * innerWidth,
+          Math.random() * innerHeight * 0.7,
+          "g'joob",
+        ), i * 150);
+      }
+    }
+
+    function cycleLyric() {
+      lyricIdx = (lyricIdx + 1) % LYRICS.length;
+      const line = LYRICS[lyricIdx];
+      const parts = line.split(/(goo goo g'joob|walrus|eggman)/gi);
+      document.getElementById("lyric").innerHTML = parts.map(p => {
+        if (/goo|walrus|eggman/i.test(p)) return `<span class="goo">${p}</span>`;
+        return p;
+      }).join("");
+    }
+
+    document.getElementById("walrus").addEventListener("click", e => {
+      const w = e.currentTarget;
+      w.classList.remove("bonk");
+      void w.offsetWidth;
+      w.classList.add("bonk");
+      walrusHonk();
+      playTrippy(80 + Math.random() * 60);
+      cycleLyric();
+      addCharge(2, e.clientX, e.clientY);
+    });
+
+    document.querySelectorAll(".key").forEach(btn => {
+      btn.addEventListener("click", e => {
+        const phrase = PHRASES[btn.dataset.phrase];
+        document.getElementById("lyric").innerHTML = phrase.replace(
+          /(goo goo g'joob|walrus|eggman|shieeet)/gi,
+          m => `<span class="goo">${m}</span>`,
+        );
+        playTrippy(130 + Math.random() * 80);
+        addCharge(1, e.clientX, e.clientY);
+        spawnFloater(e.clientX, e.clientY, btn.dataset.phrase);
+      });
+    });
+
+    document.body.addEventListener("click", ensureAudio, { once: true });
+  </script>
+</body>
+</html>
