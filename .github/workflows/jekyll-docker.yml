@@ -1,4 +1,4 @@
-name: Jekyll site CI
+name: Build and deploy site
 
 on:
   push:
@@ -8,6 +8,9 @@ on:
 
 jobs:
   build:
+    permissions:
+      pages: write
+      id-token: write
 
     runs-on: ubuntu-latest
 
@@ -18,3 +21,20 @@ jobs:
         docker run \
         -v ${{ github.workspace }}:/srv/jekyll -v ${{ github.workspace }}/_site:/srv/jekyll/_site \
         jekyll/builder:latest /bin/bash -c "chmod -R 777 /srv/jekyll && jekyll build --future"
+    - name: Configure Pages
+      uses: actions/configure-pages@v4
+    - name: Upload artifact for GitHub Pages
+      uses: actions/upload-pages-artifact@v1
+      with:
+        path: _site
+
+  deploy:
+    needs: build
+    permissions:
+      pages: write
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Deploy to GitHub Pages
+      uses: actions/deploy-pages@v1

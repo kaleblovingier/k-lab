@@ -4,6 +4,11 @@
   <meta charset="UTF-8" />
   <title>BO1DV3RS3.W0RLD // K-LAB TRANSMISSION</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <meta name="theme-color" content="#0f0" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <link rel="apple-touch-icon" href="icon.svg" />
   <style>
     @keyframes glitch { 
       0%, 100% { transform: translate(0); }
@@ -160,6 +165,111 @@
       color: #0f0;
       animation: flicker 1.5s infinite;
     }
+    .ai-app {
+      margin-top: 3rem;
+      padding: 1.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.02);
+      backdrop-filter: blur(6px);
+    }
+    .ai-app h3 {
+      margin-top: 0;
+      color: #8b5bff;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .ai-app p,
+    .ai-app li {
+      line-height: 1.7;
+    }
+    .ai-tabs {
+      display: grid;
+      gap: 0.8rem;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      margin: 1rem 0 1.5rem;
+    }
+    .ai-tab {
+      padding: 0.9rem 1rem;
+      border: 1px solid #0f0;
+      border-radius: 999px;
+      background: rgba(0, 255, 0, 0.06);
+      color: #0f0;
+      cursor: pointer;
+      text-align: center;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+    .ai-tab.active,
+    .ai-tab:hover {
+      background: #0f0;
+      color: #000;
+      transform: translateY(-1px);
+    }
+    .ai-panel {
+      padding: 1rem 1.25rem;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      background: rgba(0, 0, 0, 0.45);
+    }
+    .quiz {
+      margin-top: 1.5rem;
+      display: grid;
+      gap: 1rem;
+    }
+    .quiz button {
+      border: 1px solid #8b5bff;
+      border-radius: 999px;
+      padding: 0.8rem 1rem;
+      background: transparent;
+      color: #f5f5ff;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+    .quiz button:hover {
+      background: #8b5bff;
+      color: #000;
+    }
+    .quiz-result {
+      margin-top: 0.8rem;
+      padding: 1rem;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      min-height: 3rem;
+    }
+    .quiz-result.correct {
+      color: #0f0;
+    }
+    .quiz-result.incorrect {
+      color: #f00;
+    }
+    .rezz-btn {
+      margin-left: 1rem;
+      background: #0f0;
+      color: #000;
+      box-shadow: 0 0 14px rgba(0,255,0,0.3);
+    }
+    .rezz-btn:hover {
+      background: #fff;
+      color: #000;
+      transform: scale(1.02);
+    }
+    .protocol-btn {
+      margin-left: 0.75rem;
+      background: linear-gradient(90deg,#ffd54a,#ff7043);
+      color: #000;
+      border: 1px solid rgba(255,255,255,0.06);
+      box-shadow: 0 6px 18px rgba(255,112,67,0.12);
+    }
+    .protocol-btn:hover { transform: translateY(-2px) scale(1.02); }
+    .spock-btn {
+      margin-left: 0.75rem;
+      background: linear-gradient(90deg,#90caf9,#64b5f6);
+      color: #000;
+      border: 1px solid rgba(255,255,255,0.06);
+      box-shadow: 0 6px 18px rgba(100,181,246,0.08);
+    }
+    .spock-btn:hover { transform: translateY(-2px) scale(1.02); }
   </style>
 </head>
 <body>
@@ -183,6 +293,9 @@
       </div>
       
       <a class="btn" href="https://twitch.tv/1badbird" target="_blank">3NT3R_TH3_STR34M</a>
+      <button class="btn rezz-btn" id="rezz-btn">REZZ TH3 HUM4NS</button>
+      <button class="btn protocol-btn" id="eminem-btn">EMIN3M_PR0T0C0L</button>
+      <button class="btn spock-btn" id="spock-btn">R3C0V3RY_SP0CK</button>
     </section>
 
     <section>
@@ -205,6 +318,49 @@
     </section>
 
     <section>
+      <h2>DAFT_PUNK_PROTOCOL</h2>
+      <p class="cryptic">▓▒░ SYNTH3T1C_H34RTB34T_1NV4D3R ░▒▓</p>
+      <div style="margin: 2rem 0; border: 1px solid #0f0; padding: 1rem; border-radius: 12px; background: rgba(0, 255, 0, 0.05);">
+        <iframe data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/track/6k1qIMHisshjNGDruEtCRt?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+      </div>
+      <p class="cryptic" style="font-size:0.8rem;">▓▒░ TRANSM1SS10N: 1N_S1NC_4ND_1N_D4FT ░▒▓</p>
+    </section>
+
+    <section class="ai-app" id="ai-app">
+      <div class="tag">⚠ AI + BRAIN BASICS // EASY GUIDE</div>
+      <h2>AI & BRAIN BASICS</h2>
+      <p>A simple, friendly guide to the main AI dangers and how your brain reacts. This is the version for people who want quick, useful facts without the jargon.</p>
+
+      <div class="ai-tabs">
+        <button class="ai-tab active" data-topic="bias">Bias & Lies</button>
+        <button class="ai-tab" data-topic="privacy">Privacy</button>
+        <button class="ai-tab" data-topic="automation">Robots & Jobs</button>
+        <button class="ai-tab" data-topic="deepfake">Fake Media</button>
+        <button class="ai-tab" data-topic="neuro">Brain Basics</button>
+      </div>
+
+      <div class="ai-panel" id="ai-panel">
+        <h3 id="panel-title">Bias & Disinformation</h3>
+        <p id="panel-description">AI systems can inherit prejudices from the data they learn from. That means decisions, recommendations, and generated content may unfairly target people or amplify false beliefs.</p>
+        <ul id="panel-list">
+          <li>Low visibility: biased training data becomes hidden discrimination.</li>
+          <li>High impact: trusted systems can spread wrong or harmful conclusions quickly.</li>
+          <li>Active risk: no single dataset fixes bias; humans must audit the output.</li>
+        </ul>
+        <p class="warning">W4RN1NG: If your AI output feels too certain or too clean, check the source and verify with humans.</p>
+      </div>
+
+      <div class="quiz">
+        <h3>Quick Threat Check</h3>
+        <p>Scenario: An AI chatbot offers a personalized health plan but asks for your location, family history, and social media posts. What is the safest response?</p>
+        <button data-answer="a">A. Share the data and trust the AI to help.</button>
+        <button data-answer="b">B. Ask how the data is used and only share what is necessary.</button>
+        <button data-answer="c">C. Ignore the risk and keep chatting for free advice.</button>
+        <div class="quiz-result" id="quiz-result">Select one answer to see the verdict.</div>
+      </div>
+    </section>
+
+    <section>
       <h2>J01N_TH3_FL0CK</h2>
       <p>Follow the stream, clip the chaos, and spread the Word: Bird is the Word.</p>
       <p class="cryptic">OR_D0NT_W3_D0NT_C4R3_W3R3_4LR34DY_H3R3</p>
@@ -216,5 +372,165 @@
       </p>
     </section>
   </div>
+  <script>
+    const topics = {
+      bias: {
+        title: 'Bias & Lies',
+        description: 'Sometimes AI picks up bad ideas from the stuff it learns from. That can make it repeat unfair or wrong things like a bad rumor.',
+        items: ['AI can copy bias from its training data.', 'It may make bad decisions that seem “normal.”', 'People should check AI output, not just believe it.']
+      },
+      privacy: {
+        title: 'Privacy',
+        description: 'AI often wants data, and too much sharing can expose your location, contacts, or private thoughts. Keep the important stuff to yourself.',
+        items: ['Only give what is needed.', 'Ask what data is used for.', 'Choose tools that respect your privacy.']
+      },
+      automation: {
+        title: 'Robots & Jobs',
+        description: 'AI can do some work fast, but that means jobs can change. The smart move is to learn how to work with AI, not just let it replace people.',
+        items: ['AI can take over simple tasks.', 'People still need to decide what matters.', 'Learn new skills that AI can’t do well.']
+      },
+      deepfake: {
+        title: 'Fake Media',
+        description: 'AI can make fake videos, photos, or voices that look real. That makes it easy to get fooled by stuff that never happened.',
+        items: ['Check where media came from.', 'Look for weird details in fake videos.', 'Ask a trusted source before sharing.']
+      },
+      neuro: {
+        title: 'Brain Basics',
+        description: 'Your brain gets better with practice and curiosity. Too much passive screen time can make it harder to focus, so stay active and ask questions.',
+        items: ['Brains grow stronger when you learn and do.', 'Screens are fine in small doses, but too much can dull attention.', 'Question what AI says and think for yourself.']
+      }
+    };
+
+    document.querySelectorAll('.ai-tab').forEach(button => {
+      button.addEventListener('click', () => {
+        document.querySelectorAll('.ai-tab').forEach(node => node.classList.remove('active'));
+        button.classList.add('active');
+        const topic = topics[button.dataset.topic];
+        document.getElementById('panel-title').textContent = topic.title;
+        document.getElementById('panel-description').textContent = topic.description;
+        document.getElementById('panel-list').innerHTML = topic.items.map(item => `<li>${item}</li>`).join('');
+      });
+    });
+
+    document.querySelectorAll('.quiz button').forEach(button => {
+      button.addEventListener('click', () => {
+        const result = document.getElementById('quiz-result');
+        const answer = button.dataset.answer;
+        if (answer === 'b') {
+          result.textContent = 'Correct. Ask questions and only share what is needed.';
+          result.className = 'quiz-result correct';
+        } else {
+          result.textContent = 'Not quite. The safest move is to ask how your data is used and protect your privacy.';
+          result.className = 'quiz-result incorrect';
+        }
+      });
+    });
+
+    document.getElementById('rezz-btn').addEventListener('click', () => {
+      const overlay = document.createElement('div');
+      overlay.style.position = 'fixed';
+      overlay.style.top = '0';
+      overlay.style.left = '0';
+      overlay.style.width = '100%';
+      overlay.style.height = '100%';
+      overlay.style.background = 'rgba(0,0,0,0.95)';
+      overlay.style.color = '#0f0';
+      overlay.style.display = 'flex';
+      overlay.style.alignItems = 'center';
+      overlay.style.justifyContent = 'center';
+      overlay.style.textAlign = 'center';
+      overlay.style.zIndex = '9999';
+      overlay.innerHTML = `
+        <div style="max-width: 720px; padding: 2rem; border: 2px solid #0f0; border-radius: 24px; background: rgba(0,0,0,0.8);">
+          <h2 style="font-size: 2rem; letter-spacing: 0.15em; margin-bottom: 1rem;">R3ZZ1NG TH3 HUM4NS</h2>
+          <p style="font-family: monospace; font-size: 1.1rem; line-height: 1.8;">The transmission is complete. Humans are being reconstructed in the digital plane. Do not blink.</p>
+          <pre style="margin-top: 1.5rem; padding: 1rem; border: 1px dashed #0f0; text-align: left; overflow-x: auto; background: rgba(0,0,0,0.4);">STATUS: R3Z7_COMP1LET3
+SEQUENCE: 0xDEADBEEF
+TARGET: H0M0_S4P13NS
+ENGAGE: F4LL_1N_L1N3</pre>
+          <button id="close-rezz" style="margin-top: 1.5rem; padding: 0.9rem 1.5rem; border-radius: 999px; border: 1px solid #0f0; background: #000; color: #0f0; cursor: pointer;">CLOSE TRANSMISSION</button>
+        </div>
+      `;
+      document.body.appendChild(overlay);
+      document.getElementById('close-rezz').addEventListener('click', () => overlay.remove());
+    });
+
+    // EMIN3M PROTOCOL
+    document.getElementById('eminem-btn').addEventListener('click', () => {
+      const overlay = document.createElement('div');
+      overlay.style.position = 'fixed';
+      overlay.style.top = '0';
+      overlay.style.left = '0';
+      overlay.style.width = '100%';
+      overlay.style.height = '100%';
+      overlay.style.background = 'rgba(8,4,0,0.96)';
+      overlay.style.color = '#ffd54a';
+      overlay.style.display = 'flex';
+      overlay.style.alignItems = 'center';
+      overlay.style.justifyContent = 'center';
+      overlay.style.textAlign = 'center';
+      overlay.style.zIndex = '9999';
+      overlay.innerHTML = `
+        <div style="max-width: 720px; padding: 2rem; border: 2px solid #ffd54a; border-radius: 24px; background: rgba(0,0,0,0.85);">
+          <h2 style="font-size: 2rem; letter-spacing: 0.12em; margin-bottom: 1rem; color:#ffd54a;">EMIN3M PR0T0C0L</h2>
+          <p style="font-family: monospace; font-size: 1.05rem; line-height: 1.6; color: #fff;">Protocol engaged. This UI does not host or reproduce copyrighted lyrics. Open an official stream to listen.</p>
+          <div style="margin-top:1rem; display:flex; gap:0.75rem; justify-content:center;">
+            <a href="https://open.spotify.com/search/eminem" target="_blank" style="padding:0.8rem 1rem; border-radius:999px; background:#ffd54a; color:#000; text-decoration:none; font-weight:700;">OPEN SPOTIFY</a>
+            <button id="close-eminem" style="padding:0.8rem 1rem; border-radius:999px; border:1px solid #ffd54a; background:transparent; color:#ffd54a;">CLOSE</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(overlay);
+      document.getElementById('close-eminem').addEventListener('click', () => overlay.remove());
+    });
+
+    // R3C0V3RY SP0CK
+    document.getElementById('spock-btn').addEventListener('click', () => {
+      const overlay = document.createElement('div');
+      overlay.style.position = 'fixed';
+      overlay.style.top = '0';
+      overlay.style.left = '0';
+      overlay.style.width = '100%';
+      overlay.style.height = '100%';
+      overlay.style.background = 'rgba(2,12,20,0.98)';
+      overlay.style.color = '#90caf9';
+      overlay.style.display = 'flex';
+      overlay.style.alignItems = 'center';
+      overlay.style.justifyContent = 'center';
+      overlay.style.textAlign = 'center';
+      overlay.style.zIndex = '9999';
+      overlay.innerHTML = `
+        <div style="max-width: 720px; padding: 2rem; border: 2px solid #90caf9; border-radius: 24px; background: rgba(0,0,0,0.85);">
+          <h2 style="font-size: 2rem; letter-spacing: 0.12em; margin-bottom: 1rem; color:#90caf9;">R3C0V3RY SP0CK</h2>
+          <p style="font-family: monospace; font-size: 1.05rem; line-height: 1.6; color: #fff;">Recovery protocol initialized. Running diagnostics and restoring cognitive buffers.</p>
+          <pre style="text-align:left; margin-top:1rem; padding:1rem; border:1px dashed #90caf9; background: rgba(0,0,0,0.35);">[ OK ] MEMORY_CHECK: STABLE
+[ OK ] SYNAPTIC_SYNC: 93%
+[ WARN ] ATTENTION: FRAGMENTED
+[ ACTION ] APPLY_RST: /recovery/sp0ck</pre>
+          <div style="margin-top:1rem; display:flex; gap:0.75rem; justify-content:center;">
+            <button id="apply-spock" style="padding:0.8rem 1rem; border-radius:999px; background:#90caf9; color:#000; font-weight:700;">APPLY SEQUENCE</button>
+            <button id="close-spock" style="padding:0.8rem 1rem; border-radius:999px; border:1px solid #90caf9; background:transparent; color:#90caf9;">CLOSE</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(overlay);
+      document.getElementById('close-spock').addEventListener('click', () => overlay.remove());
+      document.getElementById('apply-spock').addEventListener('click', () => {
+        alert('Recovery sequence applied — rebooting focus protocols.');
+        overlay.remove();
+      });
+    });
+
+  </script>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(() => {
+          console.warn('Service worker registration failed.');
+        });
+      });
+    }
+  </script>
 </body>
 </html>
