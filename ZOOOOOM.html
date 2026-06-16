@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ZOOOOOM // k-lab</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      min-height: 100vh;
+      overflow: hidden;
+      background: #000;
+      cursor: none;
+      font-family: system-ui, sans-serif;
+    }
+    canvas { position: fixed; inset: 0; z-index: 1; }
+    .hud {
+      position: fixed;
+      z-index: 2;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      pointer-events: none;
+      mix-blend-mode: difference;
+    }
+    .hud h1 {
+      font-size: clamp(3rem, 15vw, 10rem);
+      font-weight: 900;
+      letter-spacing: 0.05em;
+      color: #fff;
+      text-transform: uppercase;
+      animation: stretch 0.08s infinite alternate;
+    }
+    .speed {
+      font-family: "Courier New", monospace;
+      font-size: clamp(1rem, 4vw, 2rem);
+      color: #0f0;
+      letter-spacing: 0.3em;
+      margin-top: 1rem;
+    }
+    .hint {
+      position: fixed;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      color: rgba(255,255,255,0.35);
+      text-transform: uppercase;
+      pointer-events: none;
+    }
+    @keyframes stretch {
+      from { transform: scaleX(1) scaleY(1); }
+      to { transform: scaleX(1.04) scaleY(0.96); }
+    }
+    a.back {
+      position: fixed;
+      top: 1rem;
+      left: 1rem;
+      z-index: 3;
+      color: rgba(255,255,255,0.4);
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-decoration: none;
+      text-transform: uppercase;
+      pointer-events: auto;
+    }
+    a.back:hover { color: #0f0; }
+  </style>
+</head>
+<body>
+  <canvas id="c"></canvas>
+  <div class="hud">
+    <h1 id="title">ZOOM</h1>
+    <div class="speed" id="speed">0 MPH</div>
+  </div>
+  <p class="hint">move mouse · click · hold space</p>
+  <a class="back" href="MOOD_MIXER.html">→ mood mixer</a>
+
+  <script>
+    const canvas = document.getElementById('c');
+    const ctx = canvas.getContext('2d');
+    let w, h, mx = 0, my = 0, speed = 0, boost = false;
+    const stars = [];
+
+    function resize() {
+      w = canvas.width = innerWidth;
+      h = canvas.height = innerHeight;
+    }
+    resize();
+    addEventListener('resize', resize);
+
+    for (let i = 0; i < 400; i++) {
+      stars.push({
+        x: Math.random() * 2000 - 1000,
+        y: Math.random() * 2000 - 1000,
+        z: Math.random() * 2000,
+      });
+    }
+
+    addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+    addEventListener('mousedown', () => boost = true);
+    addEventListener('mouseup', () => boost = false);
+    addEventListener('keydown', e => { if (e.code === 'Space') { e.preventDefault(); boost = true; } });
+    addEventListener('keyup', e => { if (e.code === 'Space') boost = false; });
+
+    let audioCtx;
+    function ensureAudio() {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+    }
+    addEventListener('click', ensureAudio, { once: true });
+
+    function whoosh() {
+      if (!audioCtx || Math.random() > 0.92) return;
+      const t = audioCtx.currentTime;
+      const osc = audioCtx.createOscillator();
+      const g = audioCtx.createGain();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(40 + speed * 2, t);
+      g.gain.setValueAtTime(0.03, t);
+      g.gain.exponentialRampToValueAtTime(0.001, t + 0.15);
+      osc.connect(g).connect(audioCtx.destination);
+      osc.start(t);
+      osc.stop(t + 0.2);
+    }
+
+    function frame() {
+      const target = boost ? 420 : 120 + Math.hypot(mx - w/2, my - h/2) * 0.3;
+      speed += (target - speed) * 0.08;
+
+      const zlen = 'O'.repeat(Math.min(40, Math.floor(speed / 15)));
+      document.getElementById('title').textContent = 'Z' + zlen + 'M';
+      document.getElementById('speed').textContent = Math.floor(speed * 2.237) + ' MPH';
+
+      ctx.fillStyle = `rgba(0,0,0,${0.15 + speed / 800})`;
+      ctx.fillRect(0, 0, w, h);
+
+      const cx = w / 2, cy = h / 2;
+      const warp = speed * 0.04 + 2;
+
+      stars.forEach(s => {
+        s.z -= warp;
+        if (s.z <= 0) { s.z = 2000; s.x = Math.random() * 2000 - 1000; s.y = Math.random() * 2000 - 1000; }
+
+        const k = 400 / s.z;
+        const px = s.x * k + cx;
+        const py = s.y * k + cy;
+
+        if (px < 0 || px > w || py < 0 || py > h) return;
+
+        const size = (1 - s.z / 2000) * 4;
+        const hue = (speed * 0.5 + s.z * 0.05) % 360;
+        ctx.fillStyle = `hsl(${hue}, 100%, ${50 + speed / 10}%)`;
+        ctx.beginPath();
+        ctx.arc(px, py, size, 0, Math.PI * 2);
+        ctx.fill();
+
+        if (size > 2) {
+          ctx.strokeStyle = ctx.fillStyle;
+          ctx.lineWidth = size * 0.5;
+          ctx.beginPath();
+          ctx.moveTo(px, py);
+          ctx.lineTo(px - (px - cx) * 0.05, py - (py - cy) * 0.05);
+          ctx.stroke();
+        }
+      });
+
+      whoosh();
+      requestAnimationFrame(frame);
+    }
+    frame();
+  </script>
+</body>
+</html>

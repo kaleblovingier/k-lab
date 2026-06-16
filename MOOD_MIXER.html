@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>K-LAB MOOD MIXER // Spotify API</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, sans-serif;
+      background: linear-gradient(135deg, #0d0d0d 0%, #1a1a2e 50%, #0f0f0f 100%);
+      color: #fff;
+      min-height: 100vh;
+      padding: 1.5rem;
+    }
+    .wrap { max-width: 900px; margin: 0 auto; }
+    h1 {
+      font-size: clamp(1.4rem, 4vw, 2rem);
+      color: #1DB954;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 0.25rem;
+    }
+    .sub { opacity: 0.5; font-size: 0.8rem; margin-bottom: 1.5rem; }
+    .card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(29,185,84,0.2);
+      border-radius: 16px;
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+    }
+    .row { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; margin-bottom: 0.75rem; }
+    label { font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.7; min-width: 100px; }
+    input[type=range] { flex: 1; min-width: 140px; accent-color: #1DB954; }
+    .val { font-family: monospace; font-size: 0.8rem; color: #1DB954; width: 36px; }
+    .presets { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1rem 0; }
+    .preset, .btn {
+      padding: 0.55rem 1rem;
+      border-radius: 99px;
+      border: 1px solid rgba(29,185,84,0.4);
+      background: rgba(29,185,84,0.08);
+      color: #1DB954;
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .preset:hover, .btn:hover { background: #1DB954; color: #000; }
+    .preset.active { background: #1DB954; color: #000; }
+    .btn.primary { background: #1DB954; color: #000; font-weight: 700; border: none; }
+    .btn:disabled { opacity: 0.35; cursor: not-allowed; }
+    input[type=text] {
+      flex: 1; min-width: 200px;
+      padding: 0.6rem 1rem;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(0,0,0,0.3);
+      color: #fff;
+      font-size: 0.85rem;
+    }
+    .status { font-size: 0.8rem; opacity: 0.6; margin-top: 0.5rem; }
+    .tracks { display: grid; gap: 0.5rem; margin-top: 1rem; max-height: 360px; overflow-y: auto; }
+    .track {
+      display: flex; align-items: center; gap: 0.75rem;
+      padding: 0.5rem;
+      border-radius: 8px;
+      background: rgba(0,0,0,0.25);
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .track:hover { background: rgba(29,185,84,0.12); }
+    .track img { width: 48px; height: 48px; border-radius: 6px; object-fit: cover; }
+    .track .info { flex: 1; min-width: 0; }
+    .track .name { font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .track .artist { font-size: 0.75rem; opacity: 0.55; }
+    .embed-wrap { margin-top: 1rem; border-radius: 12px; overflow: hidden; }
+    .error { color: #ff6b6b; font-size: 0.85rem; margin-top: 0.5rem; }
+    .user { color: #1DB954; font-size: 0.85rem; }
+    a { color: #1DB954; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Mood Mixer</h1>
+    <p class="sub">Spotify Web API · slide moods · mix tracks · k-lab</p>
+
+    <div class="card" id="setup">
+      <div class="row">
+        <label>Client ID</label>
+        <input type="text" id="clientId" placeholder="from developer.spotify.com/dashboard" />
+      </div>
+      <div class="row">
+        <label>API base</label>
+        <input type="text" id="apiBase" value="http://localhost:3000/api/v1/spotify" />
+      </div>
+      <div class="row">
+        <button class="btn primary" id="connectBtn">Connect Spotify</button>
+        <span class="user" id="userLabel"></span>
+      </div>
+      <p class="status">Add redirect URI in Spotify dashboard: <code id="redirectUri"></code></p>
+    </div>
+
+    <div class="card">
+      <p style="font-size:0.75rem;opacity:0.6;margin-bottom:0.75rem;text-transform:uppercase;letter-spacing:0.15em">Presets</p>
+      <div class="presets" id="presets"></div>
+
+      <div class="row"><label>Energy</label><input type="range" id="energy" min="0" max="100" value="50" /><span class="val" id="energyV">.50</span></div>
+      <div class="row"><label>Valence</label><input type="range" id="valence" min="0" max="100" value="50" /><span class="val" id="valenceV">.50</span></div>
+      <div class="row"><label>Dance</label><input type="range" id="dance" min="0" max="100" value="50" /><span class="val" id="danceV">.50</span></div>
+      <div class="row"><label>Acoustic</label><input type="range" id="acoustic" min="0" max="100" value="30" /><span class="val" id="acousticV">.30</span></div>
+      <div class="row"><label>Tempo</label><input type="range" id="tempo" min="60" max="200" value="120" /><span class="val" id="tempoV">120</span></div>
+
+      <div class="row" style="margin-top:1rem">
+        <button class="btn primary" id="mixBtn" disabled>ZOOM — MIX IT</button>
+        <button class="btn" id="saveBtn" disabled>Save Playlist</button>
+        <label style="min-width:auto"><input type="checkbox" id="useTop" checked /> use my top artists</label>
+      </div>
+      <p class="status" id="mixStatus">connect spotify first</p>
+      <p class="error" id="err"></p>
+    </div>
+
+    <div class="card" id="results" style="display:none">
+      <div class="embed-wrap" id="embed"></div>
+      <div class="tracks" id="tracks"></div>
+    </div>
+  </div>
+
+  <script>
+    const PRESETS = {
+      chill:      { energy: 25, valence: 50, dance: 40, acoustic: 70, tempo: 90,  genres: ['chill','ambient'] },
+      hype:       { energy: 90, valence: 80, dance: 90, acoustic: 10, tempo: 140, genres: ['hip-hop','dance'] },
+      focus:      { energy: 30, valence: 40, dance: 30, acoustic: 60, tempo: 100, genres: ['classical','ambient'] },
+      sad:        { energy: 25, valence: 15, dance: 25, acoustic: 50, tempo: 80,  genres: ['sad','indie'] },
+      party:      { energy: 85, valence: 90, dance: 95, acoustic: 5,  tempo: 128, genres: ['party','dance'] },
+      relaxrezz:  { energy: 40, valence: 50, dance: 55, acoustic: 20, tempo: 100, genres: ['electronic'] },
+      gofaster:   { energy: 95, valence: 70, dance: 90, acoustic: 5,  tempo: 174, genres: ['edm','dance'] },
+      walrus:     { energy: 55, valence: 65, dance: 45, acoustic: 40, tempo: 110, genres: ['rock','psychedelic'] },
+      zooooom:    { energy: 100,valence: 85, dance: 100,acoustic: 0,  tempo: 200, genres: ['edm','hardstyle'] },
+    };
+
+    const SCOPES = [
+      'user-read-private','user-read-email','user-top-read',
+      'playlist-modify-private','playlist-modify-public',
+    ].join(' ');
+
+    let tokens = null;
+    let lastTracks = [];
+    let codeVerifier = null;
+
+    const $ = id => document.getElementById(id);
+    const redirectUri = location.origin + location.pathname;
+    $('redirectUri').textContent = redirectUri;
+
+    const savedClient = localStorage.getItem('klab_spotify_client');
+    const savedApi = localStorage.getItem('klab_spotify_api');
+    if (savedClient) $('clientId').value = savedClient;
+    if (savedApi) $('apiBase').value = savedApi;
+
+    function pct(id, vId, div = 100) {
+      const el = $(id), v = $(vId);
+      const update = () => { v.textContent = div === 100 ? '.' + el.value.padStart(2,'0') : el.value; };
+      el.addEventListener('input', update);
+      update();
+    }
+    pct('energy','energyV'); pct('valence','valenceV'); pct('dance','danceV'); pct('acoustic','acousticV');
+    pct('tempo','tempoV', 1);
+
+    const presetsEl = $('presets');
+    Object.keys(PRESETS).forEach(key => {
+      const b = document.createElement('button');
+      b.className = 'preset';
+      b.textContent = key;
+      b.onclick = () => {
+        document.querySelectorAll('.preset').forEach(p => p.classList.remove('active'));
+        b.classList.add('active');
+        const p = PRESETS[key];
+        $('energy').value = p.energy; $('energyV').textContent = '.' + String(p.energy).padStart(2,'0');
+        $('valence').value = p.valence; $('valenceV').textContent = '.' + String(p.valence).padStart(2,'0');
+        $('dance').value = p.dance; $('danceV').textContent = '.' + String(p.dance).padStart(2,'0');
+        $('acoustic').value = p.acoustic; $('acousticV').textContent = '.' + String(p.acoustic).padStart(2,'0');
+        $('tempo').value = p.tempo; $('tempoV').textContent = p.tempo;
+        b.dataset.genres = JSON.stringify(p.genres);
+      };
+      presetsEl.appendChild(b);
+    });
+
+    function randStr(n) {
+      const a = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      return Array.from(crypto.getRandomValues(new Uint8Array(n)), x => a[x % a.length]).join('');
+    }
+
+    async function sha256(s) {
+      const d = new TextEncoder().encode(s);
+      const h = await crypto.subtle.digest('SHA-256', d);
+      return btoa(String.fromCharCode(...new Uint8Array(h))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+    }
+
+    async function connect() {
+      const clientId = $('clientId').value.trim();
+      if (!clientId) { $('err').textContent = 'enter Spotify Client ID'; return; }
+      localStorage.setItem('klab_spotify_client', clientId);
+      localStorage.setItem('klab_spotify_api', $('apiBase').value.trim());
+
+      codeVerifier = randStr(64);
+      const challenge = await sha256(codeVerifier);
+      sessionStorage.setItem('pkce_verifier', codeVerifier);
+
+      const params = new URLSearchParams({
+        client_id: clientId,
+        response_type: 'code',
+        redirect_uri: redirectUri,
+        scope: SCOPES,
+        code_challenge_method: 'S256',
+        code_challenge: challenge,
+      });
+      location.href = `https://accounts.spotify.com/authorize?${params}`;
+    }
+
+    async function exchangeCode(code) {
+      const apiBase = $('apiBase').value.replace(/\/$/, '');
+      const verifier = sessionStorage.getItem('pkce_verifier');
+      const res = await fetch(`${apiBase}/token`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code, redirectUri, codeVerifier: verifier }),
+      });
+      if (!res.ok) throw new Error((await res.json()).message || res.statusText);
+      return res.json();
+    }
+
+    async function api(path, opts = {}) {
+      const apiBase = $('apiBase').value.replace(/\/$/, '');
+      return fetch(`${apiBase}${path}`, {
+        ...opts,
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${tokens.access_token}`,
+          ...(opts.headers || {}),
+        },
+      });
+    }
+
+    function getMood() {
+      const active = document.querySelector('.preset.active');
+      const genres = active?.dataset.genres ? JSON.parse(active.dataset.genres) : ['electronic'];
+      return {
+        energy: +$('energy').value / 100,
+        valence: +$('valence').value / 100,
+        danceability: +$('dance').value / 100,
+        acousticness: +$('acoustic').value / 100,
+        tempo: +$('tempo').value,
+        seed_genres: genres,
+        useTopArtists: $('useTop').checked,
+        limit: 20,
+      };
+    }
+
+    async function mix() {
+      $('err').textContent = '';
+      $('mixStatus').textContent = 'mixing...';
+      const res = await api('/recommendations', { method: 'POST', body: JSON.stringify(getMood()) });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || data.error);
+      lastTracks = data.tracks || [];
+      renderTracks(lastTracks);
+      $('mixStatus').textContent = `${lastTracks.length} tracks · mood locked`;
+      $('saveBtn').disabled = !lastTracks.length;
+    }
+
+    function renderTracks(tracks) {
+      $('results').style.display = 'block';
+      const first = tracks[0];
+      if (first) {
+        const id = first.uri.split(':')[2];
+        $('embed').innerHTML = `<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/${id}?utm_source=generator" width="100%" height="152" frameBorder="0" allow="autoplay;clipboard-write;encrypted-media;fullscreen;picture-in-picture" loading="lazy"></iframe>`;
+      }
+      $('tracks').innerHTML = tracks.map((t, i) => `
+        <div class="track" data-i="${i}">
+          <img src="${t.album.images[2]?.url || t.album.images[0]?.url || ''}" alt="" />
+          <div class="info">
+            <div class="name">${t.name}</div>
+            <div class="artist">${t.artists.map(a => a.name).join(', ')}</div>
+          </div>
+        </div>
+      `).join('');
+      document.querySelectorAll('.track').forEach(el => {
+        el.onclick = () => {
+          const t = tracks[+el.dataset.i];
+          const id = t.uri.split(':')[2];
+          $('embed').innerHTML = `<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/${id}?utm_source=generator" width="100%" height="152" frameBorder="0" allow="autoplay;clipboard-write;encrypted-media;fullscreen;picture-in-picture" loading="lazy"></iframe>`;
+        };
+      });
+    }
+
+    async function savePlaylist() {
+      const name = `K-LAB Mood Mix ${new Date().toLocaleDateString()}`;
+      const active = document.querySelector('.preset.active');
+      const preset = active?.textContent || 'custom';
+      const res = await api('/playlist', {
+        method: 'POST',
+        body: JSON.stringify({
+          name,
+          description: `Mood Mixer · ${preset} · k-lab`,
+          trackUris: lastTracks.map(t => t.uri),
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || data.error);
+      $('mixStatus').textContent = `saved: ${data.name}`;
+      window.open(data.external_urls.spotify, '_blank');
+    }
+
+    async function init() {
+      const params = new URLSearchParams(location.search);
+      const code = params.get('code');
+      if (code) {
+        history.replaceState({}, '', location.pathname);
+        try {
+          tokens = await exchangeCode(code);
+          localStorage.setItem('klab_spotify_tokens', JSON.stringify(tokens));
+        } catch (e) {
+          $('err').textContent = e.message;
+          return;
+        }
+      } else {
+        const saved = localStorage.getItem('klab_spotify_tokens');
+        if (saved) tokens = JSON.parse(saved);
+      }
+
+      if (tokens) {
+        $('mixBtn').disabled = false;
+        $('connectBtn').textContent = 'Reconnect';
+        try {
+          const res = await api('/me');
+          const me = await res.json();
+          if (res.ok) $('userLabel').textContent = `✓ ${me.display_name}`;
+        } catch (_) {}
+        $('mixStatus').textContent = 'ready — slide moods and ZOOM';
+      }
+    }
+
+    $('connectBtn').onclick = connect;
+    $('mixBtn').onclick = () => mix().catch(e => { $('err').textContent = e.message; $('mixStatus').textContent = 'mix failed'; });
+    $('saveBtn').onclick = () => savePlaylist().catch(e => $('err').textContent = e.message);
+
+    init();
+  </script>
+</body>
+</html>
